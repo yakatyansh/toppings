@@ -394,4 +394,58 @@ const changePlaybackSpeed = (speed: number): void => {
   }
 }
 
+const addMetadataToppings = async (playlistID: string): Promise<void> => {
+  const metadataActionBar = document.querySelector('.metadata-action-bar') as HTMLDivElement
+  let MetadataToppings = document.querySelector('#metadata-toppings') as HTMLDivElement
+  if (MetadataToppings === null) {
+    if (playlistID === 'WL' || playlistID === 'LL') {
+      return
+    }
+    MetadataToppings = document.createElement('div')
+    MetadataToppings.className =
+        'metadata-text-wrapper style-scope ytd-playlist-header-renderer'
+    MetadataToppings.id = 'metadata-toppings'
+
+    const ToppingsHeader = document.createElement('div')
+    ToppingsHeader.id = 'toppings-header'
+
+    const ToppingsIcon = document.createElement('img')
+    ToppingsIcon.src = chrome.runtime.getURL('assets/icons/icon128.png')
+    ToppingsIcon.id = 'toppings-icon'
+
+    const ToppingsHeading = document.createElement('h2')
+    ToppingsHeading.id = 'toppings-heading'
+    ToppingsHeading.textContent = 'Toppings'
+
+    ToppingsHeader.append(ToppingsIcon, ToppingsHeading)
+    MetadataToppings.appendChild(ToppingsHeader)
+    MetadataToppings.append(await addRuntimeSection(playlistID))
+
+    if (metadataActionBar.lastChild !== null) {
+      metadataActionBar.insertBefore(
+        MetadataToppings,
+        metadataActionBar.lastChild.previousSibling
+      )
+    }
+  } else {
+    if (playlistID === 'WL' || playlistID === 'LL') {
+      MetadataToppings.remove()
+    } else {
+      await fetchToppingsAPI({
+        appName: 'youtube',
+        body: {
+          routeType: 'playlist',
+          contentId: playlistID
+        }
+      }).then((response: PlaylistInfo) => {
+        const averageRuntimeValueElement = document.getElementById('average-runtime')?.querySelector('.item-value') as HTMLSpanElement
+        const totalRuntimeValueElement = document.getElementById('total-runtime')?.querySelector('.item-value') as HTMLSpanElement
+        if (averageRuntimeValueElement !== null && totalRuntimeValueElement !== null) {
+          averageRuntimeValueElement.textContent = response.data.avg_runtime
+          totalRuntimeValueElement.textContent = formatRuntime(response.data.total_runtime)
+        }
+      })
+    }
+  }
+}
 export default onWatchPage
