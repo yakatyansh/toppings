@@ -1,5 +1,6 @@
 import { YTPlayer, createMenuItem } from 'blendora'
 import loadElement from '../../../lib/loadElement'
+import addPlaylistRuntime from './addplaylistruntime'
 
 let toggleSpeedShortcut: string
 let seekBackwardShortcut: string
@@ -391,6 +392,13 @@ const changePlaybackSpeed = (speed: number): void => {
         ? 'Normal'
         : `${Number(currentSpeed)}`
     }
+  }
+}
+
+const watchPlaylistsection = async (contentId: string): Promise<void> => {
+  const metadataActionBar = await loadElement('.metadata-action-bar', 10000, 500)
+  if (metadataActionBar !== null) {
+    await addPlaylistRuntime(contentId)
   }
 }
 
