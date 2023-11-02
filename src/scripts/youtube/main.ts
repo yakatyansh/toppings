@@ -23,9 +23,6 @@ const onYouTubeLoaded = async (youtubeAppInfo: YouTubeAppInfo): Promise<void> =>
   
   } else if (routeType === 'playlist' && playlistEnabled) {
     await onPlaylistPage(contentId)
-  
-
-    
   } 
 }
 
