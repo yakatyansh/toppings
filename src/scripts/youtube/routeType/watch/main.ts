@@ -1,5 +1,7 @@
 import { YTPlayer, createMenuItem } from 'blendora'
 import loadElement from '../../../lib/loadElement'
+import addMetadataToppings from '../playlist/addMetadataToppings'
+import addPlaylistRuntime from './addPlaylistRuntime'
 
 let toggleSpeedShortcut: string
 let seekBackwardShortcut: string
@@ -393,7 +395,6 @@ const changePlaybackSpeed = (speed: number): void => {
     }
   }
 }
-
 
 
 export default onWatchPage
